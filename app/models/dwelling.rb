@@ -1,0 +1,2 @@
+class Dwelling < ApplicationRecord
+end
