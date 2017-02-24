@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170211035201) do
+ActiveRecord::Schema.define(version: 20170213044016) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "categorizations", force: :cascade do |t|
+    t.integer "category_id"
+    t.integer "item_id"
+  end
 
   create_table "customers", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -53,8 +64,9 @@ ActiveRecord::Schema.define(version: 20170211035201) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "customer_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "postal_addresses", force: :cascade do |t|
@@ -70,10 +82,11 @@ ActiveRecord::Schema.define(version: 20170211035201) do
 
   create_table "purchases", force: :cascade do |t|
     t.integer  "item_id"
-    t.integer  "customer_id"
     t.integer  "order_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "quantity",   default: 1
+    t.index ["item_id", "order_id"], name: "index_purchases_on_item_id_and_order_id", unique: true, using: :btree
   end
 
 end
