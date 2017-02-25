@@ -4,4 +4,5 @@ class Item < ApplicationRecord
   has_many :customers, through: :orders
   has_many :categorizations
   has_many :categories, through: :categorizations
+  has_many :images, as: :imageable
 end

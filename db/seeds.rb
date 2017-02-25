@@ -47,7 +47,6 @@ times.times do
   order = Order.create(customer_id:1)
 
   times.times do
-    puts "creating"
     unique =[true,false].sample
     availability = ["in-stock", "back-order", "sold-out"].sample
     item = Item.create(
@@ -57,6 +56,9 @@ times.times do
       unique:unique,
       thumbnail: Faker::Avatar.image
     )
+    times.times do
+      item.images.create(url:Faker::Avatar.image)
+    end
     Categorization.create(category_id:categoryNew.id,item_id:item.id)
 
     Purchase.create(
