@@ -18,8 +18,11 @@ Categorization.delete_all
 
 times = 10;
 
-categoryNew = Category.create(name:"new");
-categoryOld = Category.create(name:"old");
+categoryNew = Category.create(name:"New Instruments");
+categoryUsed = Category.create(name:"Used Instruments");
+
+usedAltos = Category.create(name:"Used Alto Saxophones", parent_id:categoryUsed.id)
+newAltos = Category.create(name:"New Alto Saxophones", parent_id:categoryNew.id)
 
 times.times do
   customer = Customer.create(
