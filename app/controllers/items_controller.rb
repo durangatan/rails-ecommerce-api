@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: [:show, :update, :destroy]
+  before_action :set_images, only: :show
 
   def index
     @items = Item.all
@@ -12,7 +13,12 @@ class ItemsController < ApplicationController
   end
 
   def show
-    json_response(@item)
+    response = {
+      item: @item,
+      images: @images
+    }
+    json_response(response)
+
   end
 
   def update
@@ -33,5 +39,9 @@ class ItemsController < ApplicationController
 
   def set_item
     @item = Item.find(params[:id])
+  end
+
+  def set_images
+    @images = Image.where(imageable_id:params[:id])
   end
 end
