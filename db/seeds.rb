@@ -13,8 +13,13 @@ Dwelling.delete_all
 Item.delete_all
 Order.delete_all
 Purchase.delete_all
+Category.delete_all
+Categorization.delete_all
 
 times = 10;
+
+categoryNew = Category.create(name:"new");
+categoryOld = Category.create(name:"old");
 
 times.times do
   customer = Customer.create(
@@ -49,8 +54,11 @@ times.times do
       name: Faker.name,
       price: Faker::Number.decimal(2,2),
       availability: availability,
-      unique:unique
+      unique:unique,
+      thumbnail: Faker::Avatar.image
     )
+    Categorization.create(category_id:categoryNew.id,item_id:item.id)
+
     Purchase.create(
       item_id: item.id,
       order_id:order.id
