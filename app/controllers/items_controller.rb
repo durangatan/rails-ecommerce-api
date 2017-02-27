@@ -3,8 +3,9 @@ class ItemsController < ApplicationController
   before_action :set_images, only: :show
 
   def index
-    @items = Item.all
+    @items = Item.all_with_category_ids
     json_response(@items)
+
   end
 
   def create
