@@ -7,22 +7,25 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 require 'faker'
 
-Customer.delete_all
-PostalAddress.delete_all
-Dwelling.delete_all
-Item.delete_all
-Order.delete_all
-Purchase.delete_all
 Category.delete_all
 Categorization.delete_all
+Customer.delete_all
+Dwelling.delete_all
+Image.delete_all
+Item.delete_all
+Order.delete_all
+PostalAddress.delete_all
+Purchase.delete_all
+
 
 times = 10;
 
-categoryNew = Category.create(name:"New Instruments");
-categoryUsed = Category.create(name:"Used Instruments");
+categoryNew = Category.create(name:"New Instruments",thumbnail: Faker::Avatar.image);
+categoryUsed = Category.create(name:"Used Instruments",thumbnail: Faker::Avatar.image);
 
-usedAltos = Category.create(name:"Used Alto Saxophones", parent_id:categoryUsed.id)
-newAltos = Category.create(name:"New Alto Saxophones", parent_id:categoryNew.id)
+usedAltos = Category.create(name:"Used Alto Saxophones", parent_id:categoryUsed.id, thumbnail: Faker::Avatar.image)
+newAltos = Category.create(name:"New Alto Saxophones", parent_id:categoryNew.id, thumbnail: Faker::Avatar.image)
+
 
 times.times do
   customer = Customer.create(
@@ -53,16 +56,17 @@ times.times do
     unique =[true,false].sample
     availability = ["in-stock", "back-order", "sold-out"].sample
     item = Item.create(
-      name: Faker.name,
+      name: Faker::Commerce.product_name,
       price: Faker::Number.decimal(2,2),
       availability: availability,
       unique:unique,
-      thumbnail: Faker::Avatar.image
+      thumbnail: Faker::Avatar.image,
+      featured: [true,false,false,false,false,false,false,false,false,false].sample
     )
     times.times do
       item.images.create(url:Faker::Avatar.image)
     end
-    Categorization.create(category_id:categoryNew.id,item_id:item.id)
+    Categorization.create(category_id:[usedAltos.id,newAltos.id].sample,item_id:item.id)
 
     Purchase.create(
       item_id: item.id,
