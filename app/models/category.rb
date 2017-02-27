@@ -16,6 +16,7 @@ class Category < ApplicationRecord
         {
           id: c.id,
           name:c.name,
+          thumbnail: c.thumbnail,
           child_categories:Category.where(parent_id:c)
       })
     end
