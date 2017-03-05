@@ -10,16 +10,6 @@ class CustomersController < ApplicationController
     json_response(@customer)
   end
 
-  def update
-    @customer.update(customer_params)
-    head :no_content
-  end
-
-  def destroy
-    @customer.destroy
-    head :no_content
-  end
-
   private
 
   def customer_params

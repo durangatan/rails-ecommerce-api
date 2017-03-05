@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   resources :orders do
     resources :purchases
   end
-  resources :customers do
+  resources :customers,only:[:index,:show] do
     resources :postal_addresses
   end
 
