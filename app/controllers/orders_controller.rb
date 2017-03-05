@@ -32,6 +32,6 @@ class OrdersController < ApplicationController
   end
 
   def set_order
-    @order = order.find(params[:id])
+    @order = Order.find(params[:id])
   end
 end
