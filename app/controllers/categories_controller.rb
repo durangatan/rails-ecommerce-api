@@ -28,10 +28,10 @@ class CategoriesController < ApplicationController
   private
 
   def category_params
-    params.permit(:customer_id, :purchases)
+    params.permit(:customer_id, :purchases, :name)
   end
 
   def set_category
-    @category = category.find(params[:id])
+    @category = Category.find(params[:id])
   end
 end
