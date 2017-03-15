@@ -45,16 +45,16 @@ RSpec.describe 'Customers API', type: :request do
   end
 
   describe "POST /customers" do
-    let(:valid_attributes){{name: "Used Instruments" }}
+    let(:valid_attributes){{email: "j@mail.com", password:"secret" }}
 
     context 'when the request is valid' do
       before { post "/customers", params: valid_attributes }
       it 'creates a customer' do
-        expect(json["name"]).to eq("Used Instruments")
+        expect(json["email"]).to eq("j@mail.com")
       end
 
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
       end
     end
 
@@ -64,7 +64,7 @@ RSpec.describe 'Customers API', type: :request do
         expect(response).to have_http_status(422)
       end
       it "returns a validation failure message" do
-        expect(response.body).to match(/PG::NotNullViolation:/)
+        expect(response.body).to match(/Password can't be blank/)
       end
     end
   end
