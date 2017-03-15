@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :customers
+
+  get '/client_token', to: 'braintree#show'
+  post '/checkout', to: 'braintree#create'
+  post '/login', to: "sessions#create"
+
   resources :items do
     resources :categorizations
   end
@@ -7,9 +11,6 @@ Rails.application.routes.draw do
   resources :orders do
     resources :purchases
   end
-  resources :customers,only:[:index,:show] do
-    resources :postal_addresses
-  end
 
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  resources :customers
 end

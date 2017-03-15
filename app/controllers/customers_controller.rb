@@ -7,7 +7,23 @@ class CustomersController < ApplicationController
   end
 
   def show
-    json_response(@customer)
+    render json: CustomerSerializer.new(@customer).to_json
+  end
+
+  def create
+    @customer = Customer.create!(customer_params)
+    json_response(@customer, :created)
+  end
+
+  def update
+    @customer.update(customer_params)
+    head :no_content
+  end
+
+
+  def destroy
+    @customer.destroy
+    head :no_content
   end
 
   private
