@@ -1,7 +1,6 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: [:show, :update, :destroy]
   before_action :set_images, only: :show
-  before_action :authenticate_customer!
 
   def index
     @items = Item.all_with_category_ids

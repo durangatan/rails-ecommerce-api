@@ -7,6 +7,6 @@ class ApplicationController < ActionController::API
 
     customer_email = options.blank?? nil : options[:email]
     customer = customer_email && Customer.find_by(email: customer_email)
-    customer && ActiveSupport::SecurityUtils.secure_compare(customer.auth_token, token)
+    json_response({},:unauthorized) unless customer && ActiveSupport::SecurityUtils.secure_compare(customer.auth_token, token)
   end
 end
