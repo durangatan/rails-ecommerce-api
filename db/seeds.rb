@@ -1,10 +1,3 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
 require 'faker'
 
 Category.delete_all
@@ -18,62 +11,76 @@ PostalAddress.delete_all
 Purchase.delete_all
 
 
-times = 10;
+categoryNew = Category.create(name:"New Instruments",thumbnail: "seriesiisop.jpg");
+categoryUsed = Category.create(name:"Used Instruments",thumbnail: "markviten.png");
 
-categoryNew = Category.create(name:"New Instruments",thumbnail: Faker::Avatar.image);
-categoryUsed = Category.create(name:"Used Instruments",thumbnail: Faker::Avatar.image);
+usedAltos = Category.create(name:"Used Alto Saxophones", parent_id:categoryUsed.id, thumbnail: "cigas.jpg")
+newAltos = Category.create(name:"New Alto Saxophones", parent_id:categoryNew.id, thumbnail: "seriesiiias.jpg")
+usedClarinets = Category.create(name:"Used Clarinets", parent_id:categoryUsed.id, thumbnail: "buffet-r13-clarinet.png")
+usedTenors = Category.create(name:"Used Tenor Saxophones", parent_id:categoryUsed.id,thumbnail:"markviten.png")
+usedSopranos = Category.create(name:"Used Soprano Saxophones", parent_id:categoryUsed.id, thumbnail:"seriesiisop.jpg")
+customer = Customer.create!(
+  email: "test@mail.com",
+  password: "secret",
+  braintree_customer_id: nil,
+  name: Faker::Name.name,
+  phone: Faker::PhoneNumber.phone_number,
+  verified_email: false
+)
+address = PostalAddress.create(
+  street: Faker::Address.street_address,
+  city: Faker::Address.city,
+  subdivision: Faker::Address.state,
+  postal_code: Faker::Address.zip_code,
+  country_code: Faker::Address.country_code,
+  time_zone: Faker::Address.time_zone
+)
+Dwelling.create(
+  customer_id: customer.id,
+  address_id:address.id
+)
 
-usedAltos = Category.create(name:"Used Alto Saxophones", parent_id:categoryUsed.id, thumbnail: Faker::Avatar.image)
-newAltos = Category.create(name:"New Alto Saxophones", parent_id:categoryNew.id, thumbnail: Faker::Avatar.image)
 
 
-times.times do
-  customer = Customer.create(
-    email: Faker::Internet.email,
-    password: "secret",
-    braintree_customer_id: nil,
-    name: Faker::Name.name,
-    phone: Faker::PhoneNumber.phone_number,
-    verified_email: false
+itemArray =[{
+              name:"Buffet R13 Clarinet",
+              thumbnail:"buffet-r13-clarinet.png",
+              category:usedClarinets,
+              featured:true,
+            price:240000},{
+              name:"Selmer Cigar Cutter",
+              thumbnail:"cigas.jpg",
+              featured: false,
+              category:usedAltos,
+            price:500000},{
+              name:"Selmer Mark VI Tenor Saxophone",
+              thumbnail:"markviten.png",
+              featured: true,
+              category:usedTenors,
+            price:1000000},{
+              name:"Selmer Series III Alto Saxophone",
+              thumbnail:"seriesiiias.jpg",
+              featured: false,
+              category:newAltos,
+            price:500000},{
+              name:"Selmer Series II Soprano Saxophone",
+              thumbnail:"seriesiisop.jpg",
+              featured: false,
+              price:400000,
+category:usedSopranos}]
+
+itemArray.each do |item|
+
+  unique =[true,false].sample
+  availability = ["in-stock", "back-order", "sold-out"].sample
+  new_item = Item.create(
+    name: item[:name],
+    price: item[:price],
+    availability: availability,
+    unique:unique,
+    thumbnail: item[:thumbnail],
+    featured: item[:featured]
   )
-  address = PostalAddress.create(
-    street: Faker::Address.street_address,
-    city: Faker::Address.city,
-    subdivision: Faker::Address.state,
-    postal_code: Faker::Address.zip_code,
-    country_code: Faker::Address.country_code,
-    time_zone: Faker::Address.time_zone
-  )
-  Dwelling.create(
-    customer_id: customer.id,
-    address_id:address.id
-  )
-
-
-  order = Order.create(customer_id:1)
-
-  times.times do
-    unique =[true,false].sample
-    availability = ["in-stock", "back-order", "sold-out"].sample
-    item = Item.create(
-      name: Faker::Commerce.product_name,
-      price: Faker::Number.decimal(2,2),
-      availability: availability,
-      unique:unique,
-      thumbnail: Faker::Avatar.image,
-      featured: [true,false,false,false,false,false,false,false,false,false].sample
-    )
-    times.times do
-      item.images.create(url:Faker::Avatar.image)
-    end
-    Categorization.create(category_id:[usedAltos.id,newAltos.id].sample,item_id:item.id)
-
-    Purchase.create(
-      item_id: item.id,
-      order_id:order.id
-    )
-  end
-
-  Order.create(
-  customer_id: customer.id, purchases:Purchase.all)
+  category_id = item[:category].id
+  Categorization.create(category_id:category_id,item_id:new_item.id)
 end
