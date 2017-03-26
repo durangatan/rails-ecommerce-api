@@ -3,10 +3,13 @@ class ApplicationController < ActionController::API
   include ExceptionHandler
 
   def authenticate_customer!
-    token, options = ActionController::HttpAuthentication::Token.token_and_options(request)
+    token = request.headers["Authorization"]
+    @customer = Customer.find_by(auth_token: token)
 
-    customer_email = options.blank?? nil : options[:email]
-    customer = customer_email && Customer.find_by(email: customer_email)
-    json_response({},:unauthorized) unless customer && ActiveSupport::SecurityUtils.secure_compare(customer.auth_token, token)
+    return json_response({}, :unauthorized) unless @customer
+  end
+
+  def admin_only!
+    return json_response({}, :unauthorized) unless @customer && @customer.admin
   end
 end
