@@ -6,7 +6,7 @@ class CreatePostalAddresses < ActiveRecord::Migration[5.0]
       t.string :subdivision
       t.string :postal_code
       t.string :country_code
-      t.string :time_zone, default: "UTC"
+      t.string :time_zone, default: 'UTC'
       t.timestamps
     end
   end
