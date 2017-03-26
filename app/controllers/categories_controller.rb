@@ -1,5 +1,8 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :update, :destroy]
+  before_action :authenticate_customer!, only: [:create, :update, :destroy]
+  before_action :admin_only!, only: [:create, :update, :destroy]
+
   def index
     @categories = Category.all_nested
     json_response(@categories)
@@ -27,7 +30,7 @@ class CategoriesController < ApplicationController
   private
 
   def category_params
-    params.permit(:customer_id, :purchases, :name)
+    params.permit(:thumbnail, :parent_id, :name)
   end
 
   def set_category
