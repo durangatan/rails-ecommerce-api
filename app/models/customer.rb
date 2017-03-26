@@ -14,5 +14,4 @@ class Customer < ApplicationRecord
       break unless Customer.find_by(auth_token: auth_token)
     end
   end
-
 end

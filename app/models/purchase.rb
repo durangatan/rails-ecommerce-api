@@ -3,9 +3,7 @@ class Purchase < ApplicationRecord
   belongs_to :order
   has_one :customer, through: :order
 
-
   def total
     item.price * quantity
   end
-
 end

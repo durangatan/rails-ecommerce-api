@@ -6,10 +6,9 @@ class Item < ApplicationRecord
   has_many :categories, through: :categorizations
   has_many :images, as: :imageable
 
-
   def self.all_with_category_ids
     response = []
-    self.all.each do |item|
+    all.each do |item|
       attrs = item.attributes
       attrs[:category_ids] = item.categories.map(&:id)
       response << attrs
