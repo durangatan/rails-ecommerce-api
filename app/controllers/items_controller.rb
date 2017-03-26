@@ -1,11 +1,12 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: [:show, :update, :destroy]
   before_action :set_images, only: :show
+  before_action :authenticate_customer!, only: [:create, :update, :destroy]
+  before_action :admin_only!, only: [:create, :update, :destroy]
 
   def index
     @items = Item.all_with_category_ids
     json_response(@items)
-
   end
 
   def create
@@ -43,6 +44,6 @@ class ItemsController < ApplicationController
   end
 
   def set_images
-    @images = Image.where(imageable_id:params[:id])
+    @images = Image.where(imageable_id: params[:id])
   end
 end
