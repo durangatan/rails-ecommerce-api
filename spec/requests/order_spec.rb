@@ -1,42 +1,42 @@
 require 'rails_helper'
 
 RSpec.describe 'Orders API', type: :request do
+  let!(:admin) { create(:admin) }
+  before { login_and_get_token }
+  let!(:orders) { create_list(:order, 10) }
+  let(:order_id) { Order.first.id }
+  let!(:customer) { create(:customer) }
+  let!(:another_customer) { create(:customer) }
 
-  let!(:orders){ create_list(:order, 10)}
-  let(:order_id){Order.first.id}
-  let!(:customer){create(:customer)}
-  let!(:another_customer){create(:customer)}
-
-  describe "GET /orders" do
-    before { get "/orders"}
-
-    it "returns an array of Orders" do
+  describe 'GET /orders' do
+    before { get_with_token '/orders' }
+    it 'returns an array of orders' do
       expect(json).not_to be_empty
       expect(json.size).to eq(10)
     end
 
-    it "returns status code 200" do
+    it 'returns status code 200' do
       expect(response).to have_http_status(200)
     end
   end
 
-  describe "GET /orders/:id" do
-    before { get "/orders/#{order_id}"}
+  describe 'GET /orders/:id' do
+    before { get_with_token "/orders/#{order_id}" }
 
-    context "when the order exists" do
-      it "returns the order" do
+    context 'when the order exists' do
+      it 'returns the order' do
         expect(json).not_to be_empty
-        expect(json["id"]).to eq(order_id)
+        expect(json['id']).to eq(order_id)
       end
 
-      it "returns status code 200" do
+      it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
     end
 
-    context "when the record does not exist" do
-      let(:order_id){1000}
-      it "returns status code 404" do
+    context 'when the record does not exist' do
+      let(:order_id) { 1000 }
+      it 'returns status code 404' do
         expect(response).to have_http_status(404)
       end
 
@@ -46,11 +46,11 @@ RSpec.describe 'Orders API', type: :request do
     end
   end
 
-  describe "POST /Orders" do
-    let(:valid_attributes){{customer_id:customer.id }}
+  describe 'POST /Orders' do
+    let(:valid_attributes) { { customer_id:customer.id } }
 
     context 'when the request is valid' do
-      before { post "/orders", params: valid_attributes }
+      before { post_with_token '/orders', valid_attributes }
       it 'creates a item' do
         expect(json['customer_id']).to eq(customer.id)
       end
@@ -61,20 +61,20 @@ RSpec.describe 'Orders API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post "/orders", params: {customer_id: -3}}
+      before { post_with_token '/orders', { customer_id: -3 } }
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
       end
-      it "returns a validation failure message" do
+      it 'returns a validation failure message' do
         expect(response.body).to match(/Validation failed/)
       end
     end
   end
 
   describe 'PUT /Orders/:id' do
-    let(:valid_attributes){{ customer_id: another_customer.id}}
+    let(:valid_attributes) { { customer_id: another_customer.id } }
     context 'when the record exists' do
-      before {put "/orders/#{order_id}", params: valid_attributes}
+      before { put_with_token "/orders/#{order_id}", params: valid_attributes }
 
       it 'updates the record' do
         expect(response.body).to be_empty
@@ -87,8 +87,8 @@ RSpec.describe 'Orders API', type: :request do
   end
 
   describe 'DELETE /orders/:id' do
-    before { delete "/orders/#{order_id}"}
-    it "returns status code 204" do
+    before { delete_with_token "/orders/#{order_id}" }
+    it 'returns status code 204' do
       expect(response).to have_http_status 204
     end
   end
