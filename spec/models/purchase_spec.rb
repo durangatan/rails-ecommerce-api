@@ -11,7 +11,7 @@ RSpec.describe Purchase, type: :model do
   it{should belong_to(:order)}
   it{should have_one(:customer).through(:order)}
 
-  it("calculates its total price") do
+  it('calculates its total price') do
     expect(@purchase.total).to eq 12
   end
 end

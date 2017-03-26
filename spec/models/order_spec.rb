@@ -8,7 +8,7 @@ RSpec.describe Order, type: :model do
   it {should belong_to(:customer)}
   it {should have_many(:purchases).dependent(:destroy)}
 
-  it "knows its item total" do
+  it 'knows its item total' do
     expect(@order.item_total).to eq 12
   end
 
