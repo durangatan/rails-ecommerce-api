@@ -1,6 +1,8 @@
 class CustomersController < ApplicationController
   before_action :set_customer, only: [:show, :update, :destroy]
-  before_action :authenticate_customer!
+  before_action :authenticate_customer!, only:[:index, :destroy, :show, :update]
+  before_action :admin_only!, only: [:index, :destroy]
+  before_action :self_only!, only: [:show, :update]
 
   def index
     @customers = Customer.all
@@ -8,22 +10,22 @@ class CustomersController < ApplicationController
   end
 
   def show
-    render json: CustomerSerializer.new(@customer).to_json
+    render json: CustomerSerializer.new(@param_customer).to_json
   end
 
   def create
-    @customer = Customer.create!(customer_params)
-    json_response(@customer, :created)
+    @param_customer = Customer.create!(customer_params)
+    json_response(@param_customer, :created)
   end
 
   def update
-    @customer.update(customer_params)
+    @param_customer.update(customer_params)
     head :no_content
   end
 
 
   def destroy
-    @customer.destroy
+    @param_customer.destroy
     head :no_content
   end
 
@@ -34,6 +36,10 @@ class CustomersController < ApplicationController
   end
 
   def set_customer
-    @customer = Customer.find(params[:id])
+    @param_customer = Customer.find(params[:id])
+  end
+
+  def self_only!
+    return json_response({}, :unauthorized) unless (@customer.id == @param_customer.id) || @customer.admin
   end
 end
