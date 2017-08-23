@@ -1,7 +1,7 @@
 class CartAdditionsController < ApplicationController
   before_action :set_cart_addition, only: [:show, :update, :destroy]
   before_action :authenticate_customer!
-  before_action :admin_only!, only: [:index, :destroy]
+  before_action :admin_only!, only: [:destroy]
   before_action :self_only!, only: [:create, :show, :update, :upsert]
 
   def index
@@ -25,6 +25,7 @@ class CartAdditionsController < ApplicationController
 
   def upsert
     @cart_addition = CartAddition.find_or_create_by(cart_addition_params)
+    json_response(@cart_addition)
   end
 
   def destroy

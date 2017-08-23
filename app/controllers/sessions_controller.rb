@@ -9,6 +9,10 @@ class SessionsController < ApplicationController
     end
   end
 
+  def destroy
+    return json_response(0)
+  end
+
   private
   def create_params
     params.permit(:email, :password)
