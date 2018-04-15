@@ -1,0 +1,13 @@
+version: '3'
+services:
+  db:
+    image: postgres
+  api:
+    build: .
+    command: bundle exec rails s
+    volumes:
+      - .:/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
