@@ -1,14 +1,15 @@
 # README
 
-Codebase for an e-commerce JSON API build in Ruby On Rails
+Codebase for an e-commerce JSON API built with Ruby On Rails.
 
 This repo is set up to run using Docker Compose. To run it locally
 
-1. Make sure you have the Docker Daemon running.
+1. Add .env file provided by me (can email me to ask for one)
 
-2. Run `docker-compose up` to generate two containers; one contains the API and one contains the DB itself. 
+2. Make sure you have the Docker Daemon running.
 
-3. In another tab, run `docker compose run api rails db:create` and `docker compose run api rails db:migrate`. To use seed data, you can also run `docker compose run api rails db:seed`.
+3. Run `docker-compose up` to generate two containers; one contains the API and one contains the DB itself. This command will also create, migrate, and seed the database with seed data.
+
 
 
 
