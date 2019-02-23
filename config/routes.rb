@@ -21,4 +21,6 @@ Rails.application.routes.draw do
   resources :cart_additions
 
   put "/cart_additions", to: 'cart_additions#upsert'
+
+  get '*path' => 'error#not_implemented'
 end
