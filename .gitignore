@@ -19,3 +19,4 @@ coverage
 .rspec
 Gemfile.lock
 schema.png
+.env
